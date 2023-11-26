@@ -2,6 +2,7 @@ package com.capgemini.programowanie.obiektowe;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.UUID;
 
 import java.time.LocalDate;
 
@@ -9,45 +10,106 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ClientTest {
 
-    Client client;
+    String clientId;
+    LocalDate createdDatetmie;
 
     @BeforeEach
     void setUp() {
-        client = new Client("Jan", "Kowalski");
+        this.clientId = UUID.randomUUID().toString();
+        this.createdDatetmie = LocalDate.now();
     }
-
-
     @Test
-    void getFirstName() {
-        assertEquals("Jan", client.getFirstName());
-    }
+    void testGetFirstName() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
 
-    @Test
-    void getLastName() {
-        assertEquals("Kowalski", client.getLastName());
-    }
+        // When
+        String firstName = client.getFirstName();
 
-    @Test
-    void getCreateDatetime() {
-        assertEquals(LocalDate.now(), client.getCreateDatetime());
+        // Then
+        assertEquals("Jan", firstName, "Incorrect first name");
     }
 
     @Test
-    void isPremium() {
-        assertFalse(client.isPremium());
+    void testGetLastName() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
+
+        // When
+        String lastName = client.getLastName();
+
+        // Then
+        assertEquals("Kowalski", lastName, "Incorrect last name");
+
+    }
+
+    @Test
+    void testGetCreateDatetime() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
+
+        // When
+        LocalDate createDatetime = client.getCreateDatetime();
+
+        // Then
+        assertEquals(LocalDate.now(), createDatetime, "Incorrect create datetime");
+    }
+
+    @Test
+    void testIsPremium() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
         client.setPremium(true);
-        assertTrue(client.isPremium());
+
+        // When
+        boolean isPremium = client.isPremium();
+
+        // Then
+        assertTrue(isPremium, "Incorrect premium status");
     }
 
     @Test
-    void getId() {
-        assertNotNull(client.getId());
+    void testGetId() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
+
+        // When
+        String id = client.getId();
+
+        // Then
+        assertNotNull(id, "Incorrect id");
     }
 
     @Test
-    void setPremium() {
-        assertFalse(client.isPremium());
+    void testSetPremiumTrue() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
+
+        // When
         client.setPremium(true);
-        assertTrue(client.isPremium());
+
+        // Then
+        assertTrue(client.isPremium(), "Incorrect premium status");
+    }
+
+    @Test
+    void testSetPremiumFalse() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
+
+        // When
+        client.setPremium(false);
+
+        // Then
+        assertFalse(client.isPremium(), "Incorrect premium status");
+    }
+
+    @Test
+    void testSetPremiumDefault() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
+
+        // Then
+        assertFalse(client.isPremium(), "Incorrect premium status");
     }
 }

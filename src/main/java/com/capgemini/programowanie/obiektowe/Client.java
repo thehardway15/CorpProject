@@ -1,7 +1,6 @@
 package com.capgemini.programowanie.obiektowe;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class Client {
 
@@ -12,12 +11,12 @@ public class Client {
     private boolean isPremium;
     private final String id;
 
-    public Client(String firstName, String lastName) {
+    public Client(String firstName, String lastName, String id, LocalDate createDatetime) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.createDatetime = LocalDate.now();
+        this.createDatetime = createDatetime;
         this.isPremium = false;
-        this.id = UUID.randomUUID().toString();
+        this.id = id;
     }
 
     public String getFirstName() {

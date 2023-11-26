@@ -1,5 +1,6 @@
 package com.capgemini.programowanie.obiektowe;
 
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,53 +16,127 @@ class ClientsManagerTest {
     }
 
     @Test
-    void createNewClient() {
-        assertEquals(0, clientsManager.getNumberOfClients());
-        clientsManager.createNewClient("Jan", "Kowalski");
+    void testCreateNewClient() {
+        // Given
+        String firstName = "Jan";
+        String lastName = "Kowalski";
+
+        // When
+        clientsManager.createNewClient(firstName, lastName);
+
+        // Then
         assertEquals(1, clientsManager.getNumberOfClients());
     }
 
     @Test
-    void activatePremiumAccount() {
+    void testCheckPremiumAccount() {
+        // Given
         String clientId = clientsManager.createNewClient("Jan", "Kowalski");
+
+        // Then
         assertFalse(clientsManager.isPremiumClient(clientId));
+    }
+
+    @Test
+    void testActivatePremiumAccount() {
+        // Given
+        String clientId = clientsManager.createNewClient("Jan", "Kowalski");
+
+        // When
         clientsManager.activatePremiumAccount(clientId);
+
+        // Then
         assertTrue(clientsManager.isPremiumClient(clientId));
     }
 
     @Test
-    void getClientFullName() {
+    void testGetClientFullName() {
+        // Given
         String clientId = clientsManager.createNewClient("Jan", "Kowalski");
+
+        // When
+        String fullName = clientsManager.getClientFullName(clientId);
+
+        // Then
         assertEquals("Jan Kowalski", clientsManager.getClientFullName(clientId));
+
     }
 
     @Test
-    void getClientCreationDate() {
+    void testGetClientCreationDate() {
+        // Given
         String clientId = clientsManager.createNewClient("Jan", "Kowalski");
-        assertNotNull(clientsManager.getClientCreationDate(clientId));
+
+        // When
+        LocalDate creationDate = clientsManager.getClientCreationDate(clientId);
+
+        // Then
+        assertEquals(LocalDate.now(), creationDate);
+
     }
 
     @Test
-    void isPremiumClient() {
+    void testIsPremiumClient() {
+        // Given
         String clientId = clientsManager.createNewClient("Jan", "Kowalski");
-        assertFalse(clientsManager.isPremiumClient(clientId));
+
+        // When
+        boolean isPremiumClient = clientsManager.isPremiumClient(clientId);
+
+        // Then
+        assertFalse(isPremiumClient);
+    }
+
+    @Test
+    void testIsPremiumClientTrue() {
+        // Given
+        String clientId = clientsManager.createNewClient("Jan", "Kowalski");
         clientsManager.activatePremiumAccount(clientId);
-        assertTrue(clientsManager.isPremiumClient(clientId));
+
+        // When
+        boolean isPremiumClient = clientsManager.isPremiumClient(clientId);
+
+        // Then
+        assertTrue(isPremiumClient);
     }
 
     @Test
-    void getNumberOfClients() {
-        assertEquals(0, clientsManager.getNumberOfClients());
+    void testGetNumberOfClients() {
+        // Given
         clientsManager.createNewClient("Jan", "Kowalski");
-        assertEquals(1, clientsManager.getNumberOfClients());
+        clientsManager.createNewClient("Jan", "Nowak");
+
+        // When
+        int numberOfClients = clientsManager.getNumberOfClients();
+
+        // Then
+        assertEquals(2, numberOfClients);
     }
 
     @Test
-    void getNumberOfPremiumClients() {
-        assertEquals(0, clientsManager.getNumberOfPremiumClients());
-        String clientId = clientsManager.createNewClient("Jan", "Kowalski");
-        assertEquals(0, clientsManager.getNumberOfPremiumClients());
+    void testGetNumberOfPremiumClientsNoPremium() {
+        // Given
+        clientsManager.createNewClient("Jan", "Kowalski");
+        clientsManager.createNewClient("Jan", "Nowak");
+
+        // When
+        int numberOfPremiumClients = clientsManager.getNumberOfPremiumClients();
+
+        // Then
+        assertEquals(0, numberOfPremiumClients);
+    }
+
+    @Test
+    void testGetNumberOfPremiumClientsOnePremium() {
+        // Given
+        clientsManager.createNewClient("Jan", "Kowalski");
+        String clientId = clientsManager.createNewClient("Jan", "Nowak");
         clientsManager.activatePremiumAccount(clientId);
-        assertEquals(1, clientsManager.getNumberOfPremiumClients());
+
+        // When
+        int numberOfPremiumClients = clientsManager.getNumberOfPremiumClients();
+
+        // Then
+        assertEquals(1, numberOfPremiumClients);
     }
 }

@@ -2,6 +2,7 @@ package com.capgemini.programowanie.obiektowe;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class ClientsManager implements Clients{
 
@@ -13,7 +14,10 @@ public class ClientsManager implements Clients{
 
     @Override
     public String createNewClient(String firstName, String lastName) {
-        Client client = new Client(firstName, lastName);
+        String newClientId = UUID.randomUUID().toString();
+        LocalDate createdDate = LocalDate.now();
+
+        Client client = new Client(firstName, lastName, newClientId, createdDate);
         clients.add(client);
         return client.getId();
     }
@@ -65,5 +69,12 @@ public class ClientsManager implements Clients{
         return (int) clients.stream()
                 .filter(Client::isPremium)
                 .count();
+    }
+
+    public Client getClientById(String clientId) {
+        return clients.stream()
+                .filter(c -> c.getId().equals(clientId))
+                .findFirst()
+                .orElseThrow(ClientNotFoundException::new);
     }
 }
