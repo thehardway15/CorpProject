@@ -1,6 +1,8 @@
 package com.capgemini.programowanie.obiektowe;
 
 import java.time.LocalDate;
+
+import com.capgemini.programowanie.obiektowe.clients.ClientsManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +60,7 @@ class ClientsManagerTest {
         String fullName = clientsManager.getClientFullName(clientId);
 
         // Then
-        assertEquals("Jan Kowalski", clientsManager.getClientFullName(clientId));
+        assertEquals("Jan Kowalski", fullName);
 
     }
 

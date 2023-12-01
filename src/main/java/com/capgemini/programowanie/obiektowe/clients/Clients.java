@@ -1,4 +1,4 @@
-package com.capgemini.programowanie.obiektowe;
+package com.capgemini.programowanie.obiektowe.clients;
 
 import java.time.LocalDate;
 

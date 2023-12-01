@@ -1,5 +1,6 @@
 package com.capgemini.programowanie.obiektowe;
 
+import com.capgemini.programowanie.obiektowe.clients.Client;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
@@ -111,5 +112,17 @@ class ClientTest {
 
         // Then
         assertFalse(client.isPremium(), "Incorrect premium status");
+    }
+
+    @Test
+    void testGetFullName() {
+        // Given
+        Client client = new Client("Jan", "Kowalski", this.clientId, this.createdDatetmie);
+
+        // When
+        String fullName = client.getFullName();
+
+        // Then
+        assertEquals("Jan Kowalski", fullName, "Incorrect full name");
     }
 }

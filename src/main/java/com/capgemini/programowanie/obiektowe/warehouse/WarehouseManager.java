@@ -1,4 +1,8 @@
-package com.capgemini.programowanie.obiektowe;
+package com.capgemini.programowanie.obiektowe.warehouse;
+
+import com.capgemini.programowanie.obiektowe.clients.Client;
+import com.capgemini.programowanie.obiektowe.clients.ClientNotFoundException;
+import com.capgemini.programowanie.obiektowe.clients.ClientsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +37,7 @@ public class WarehouseManager implements Warehouse{
         Client client = clientsManager.getClientById(clientId);
 
         if (!client.isPremium() && this.onlyForPremiumMetalType.contains(metalType)) {
-            throw new ProhibitedMetalTypeException();
+            throw new ProhibitedMetalTypeException("Client with id: " + clientId + " is not premium and cannot store " + metalType);
         }
 
         double area = mass / metalType.getDensity();

@@ -1,4 +1,4 @@
-package com.capgemini.programowanie.obiektowe;
+package com.capgemini.programowanie.obiektowe.warehouse;
 
 public enum SupportedMetalType {
     COPPER(8960),

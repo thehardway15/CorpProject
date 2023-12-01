@@ -1,5 +1,12 @@
 package com.capgemini.programowanie.obiektowe;
 
+import com.capgemini.programowanie.obiektowe.clients.ClientNotFoundException;
+import com.capgemini.programowanie.obiektowe.clients.ClientsManager;
+import com.capgemini.programowanie.obiektowe.warehouse.FullWarehouseException;
+import com.capgemini.programowanie.obiektowe.warehouse.ProhibitedMetalTypeException;
+import com.capgemini.programowanie.obiektowe.warehouse.SupportedMetalType;
+import com.capgemini.programowanie.obiektowe.warehouse.WarehouseManager;
+
 import java.util.List;
 
 public class Main {
@@ -26,7 +33,7 @@ public class Main {
 
         // Add new premium client
         String premiumClientId = clientsManager.createNewClient("Jane", "Doe");
-        clientsManager.activatePremiumAccount(premiumClientId);
+        premiumClientId = clientsManager.activatePremiumAccount(premiumClientId);
 
         isPremiumClient = clientsManager.isPremiumClient(premiumClientId);
         System.out.println("Is premium client: " + isPremiumClient);
@@ -42,13 +49,13 @@ public class Main {
         try {
             clientsManager.getClientFullName(nonExistingClientId);
         } catch (ClientNotFoundException e) {
-            System.out.println("Client not found");
+            System.out.println(e.getMessage());
         }
 
         try {
             clientsManager.isPremiumClient(nonExistingClientId);
         } catch (ClientNotFoundException e) {
-            System.out.println("Client not found");
+            System.out.println(e.getMessage());
         }
 
         // Warehouse manual test
@@ -56,14 +63,14 @@ public class Main {
         try {
             warehouseManager.addMetalIngot(nonExistingClientId, SupportedMetalType.GOLD, 10);
         } catch (ClientNotFoundException e) {
-            System.out.println("Client not found");
+            System.out.println(e.getMessage());
         }
 
         // Prohibited metal type
         try {
             warehouseManager.addMetalIngot(clientId, SupportedMetalType.GOLD, 10);
         } catch (ProhibitedMetalTypeException e) {
-            System.out.println("Prohibited metal type");
+            System.out.println("Prohibited metal type: " + e.getMessage());
         }
 
         // Full warehouse
@@ -85,7 +92,7 @@ public class Main {
             warehouseManager.addMetalIngot(clientId, SupportedMetalType.SILVER, 10);
             warehouseManager.addMetalIngot(clientId, SupportedMetalType.SILVER, 10);
         } catch (Exception e) {
-            System.out.println("Unexpected exception");
+            System.out.println("Unexpected exception:" + e.getMessage());
         }
 
         // Check if the metal ingots were added
@@ -109,7 +116,7 @@ public class Main {
             warehouseManager.addMetalIngot(premiumClientId, SupportedMetalType.PLATINUM, 10000);
             warehouseManager.addMetalIngot(premiumClientId, SupportedMetalType.IRON, 30000);
         } catch (Exception e) {
-            System.out.println("Unexpected exception");
+            System.out.println("Unexpected exception:" + e.getMessage());
         }
 
         // Check if the metal ingots were added

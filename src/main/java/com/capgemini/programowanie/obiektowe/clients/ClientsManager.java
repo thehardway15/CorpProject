@@ -1,4 +1,4 @@
-package com.capgemini.programowanie.obiektowe;
+package com.capgemini.programowanie.obiektowe.clients;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,39 +24,39 @@ public class ClientsManager implements Clients{
 
     @Override
     public String activatePremiumAccount(String clientId) {
-        Client client = clients.stream()
+        return clients.stream()
                 .filter(c -> c.getId().equals(clientId))
                 .findFirst()
-                .orElseThrow(ClientNotFoundException::new);
-        client.setPremium(true);
-        return client.getId();
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
+                .setPremium(true)
+                .getId();
     }
 
     @Override
     public String getClientFullName(String clientId) {
-        Client client = clients.stream()
+        return clients.stream()
                 .filter(c -> c.getId().equals(clientId))
                 .findFirst()
-                .orElseThrow(ClientNotFoundException::new);
-        return client.getFirstName() + " " + client.getLastName();
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
+                .getFullName();
     }
 
     @Override
     public LocalDate getClientCreationDate(String clientId) {
-        Client client = clients.stream()
+        return clients.stream()
                 .filter(c -> c.getId().equals(clientId))
                 .findFirst()
-                .orElseThrow(ClientNotFoundException::new);
-        return client.getCreateDatetime();
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
+                .getCreateDatetime();
     }
 
     @Override
     public boolean isPremiumClient(String clientId) {
-        Client client = clients.stream()
+        return clients.stream()
                 .filter(c -> c.getId().equals(clientId))
                 .findFirst()
-                .orElseThrow(ClientNotFoundException::new);
-        return client.isPremium();
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
+                .isPremium();
     }
 
     @Override
@@ -75,6 +75,6 @@ public class ClientsManager implements Clients{
         return clients.stream()
                 .filter(c -> c.getId().equals(clientId))
                 .findFirst()
-                .orElseThrow(ClientNotFoundException::new);
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId));
     }
 }

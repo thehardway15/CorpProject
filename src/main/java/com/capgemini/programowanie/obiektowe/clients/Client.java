@@ -1,4 +1,4 @@
-package com.capgemini.programowanie.obiektowe;
+package com.capgemini.programowanie.obiektowe.clients;
 
 import java.time.LocalDate;
 
@@ -39,8 +39,13 @@ public class Client {
         return id;
     }
 
-    public void setPremium(boolean premium) {
+    public Client setPremium(boolean premium) {
         isPremium = premium;
+        return this;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
 }

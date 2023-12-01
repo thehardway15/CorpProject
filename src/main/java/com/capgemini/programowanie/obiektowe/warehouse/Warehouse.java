@@ -1,4 +1,6 @@
-package com.capgemini.programowanie.obiektowe;
+package com.capgemini.programowanie.obiektowe.warehouse;
+
+import com.capgemini.programowanie.obiektowe.clients.ClientNotFoundException;
 
 import java.util.List;
 import java.util.Map;

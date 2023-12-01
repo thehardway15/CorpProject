@@ -1,5 +1,12 @@
 package com.capgemini.programowanie.obiektowe;
 
+import com.capgemini.programowanie.obiektowe.clients.Client;
+import com.capgemini.programowanie.obiektowe.clients.ClientNotFoundException;
+import com.capgemini.programowanie.obiektowe.clients.ClientsManager;
+import com.capgemini.programowanie.obiektowe.warehouse.FullWarehouseException;
+import com.capgemini.programowanie.obiektowe.warehouse.ProhibitedMetalTypeException;
+import com.capgemini.programowanie.obiektowe.warehouse.SupportedMetalType;
+import com.capgemini.programowanie.obiektowe.warehouse.WarehouseManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
