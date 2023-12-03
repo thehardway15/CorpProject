@@ -141,4 +141,35 @@ class ClientsManagerTest {
         // Then
         assertEquals(1, numberOfPremiumClients);
     }
+
+    @Test
+    void testGetNumberOfPremiumClientsDoubleCallSetPremium() {
+        // Given
+        clientsManager.createNewClient("Jan", "Kowalski");
+        String clientId = clientsManager.createNewClient("Jan", "Nowak");
+        clientsManager.activatePremiumAccount(clientId);
+        clientsManager.activatePremiumAccount(clientId);
+
+        // When
+        int numberOfPremiumClients = clientsManager.getNumberOfPremiumClients();
+
+        // Then
+        assertEquals(1, numberOfPremiumClients);
+    }
+
+    @Test
+    void testGetNumberOfPremiumMultipleClientPremium() {
+        // Given
+        clientsManager.createNewClient("Jan", "Kowalski");
+        String clientId = clientsManager.createNewClient("Jan", "Nowak");
+        String clientId2 = clientsManager.createNewClient("Jan", "Nowak");
+        clientsManager.activatePremiumAccount(clientId);
+        clientsManager.activatePremiumAccount(clientId2);
+
+        // When
+        int numberOfPremiumClients = clientsManager.getNumberOfPremiumClients();
+
+        // Then
+        assertEquals(2, numberOfPremiumClients);
+    }
 }

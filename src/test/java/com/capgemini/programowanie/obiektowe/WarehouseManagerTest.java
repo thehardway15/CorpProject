@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -57,67 +58,73 @@ class WarehouseManagerTest {
 
     @Test
     void testAddMetalIngot() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
 
+        // When
+        List<SupportedMetalType> storedMetalTypes = warehouseManager.getStoredMetalTypesByClient(client.getId());
+
         // Then
-        assertEquals(10 / SupportedMetalType.IRON.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(client.getId()));
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.IRON));
-        assertEquals(List.of(SupportedMetalType.IRON), warehouseManager.getStoredMetalTypesByClient(client.getId()));
+        assertEquals(1, storedMetalTypes.size());
     }
 
     @Test
     void testAddMetalIngotMultiple() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
 
+        // When
+        Double storedMass = warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.IRON);
+
         // Then
-        assertEquals(20 / SupportedMetalType.IRON.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(client.getId()));
-        assertEquals(20, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.IRON));
-        assertEquals(List.of(SupportedMetalType.IRON), warehouseManager.getStoredMetalTypesByClient(client.getId()));
+        assertEquals(20, storedMass);
     }
 
     @Test
     void testAddMetalIngotMultipleMetalTypes() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.SILVER, 10);
+
+        // When
         List<SupportedMetalType> storedMetalTypes = warehouseManager.getStoredMetalTypesByClient(client.getId());
 
         // Then
-        assertEquals(10 / SupportedMetalType.IRON.getDensity() + 10 / SupportedMetalType.SILVER.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(client.getId()));
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.IRON));
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.SILVER));
-        assertEquals(2, storedMetalTypes.size());
-        assertTrue(storedMetalTypes.contains(SupportedMetalType.IRON));
-        assertTrue(storedMetalTypes.contains(SupportedMetalType.SILVER));
+        assertTrue(storedMetalTypes.containsAll(List.of(SupportedMetalType.IRON, SupportedMetalType.SILVER)));
     }
 
     @Test
     void testAddMetalIngotMultipleClients() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(premiumClient.getId(), SupportedMetalType.SILVER, 10);
 
+        // When
+        List<SupportedMetalType> storedMetalTypesClient = warehouseManager.getStoredMetalTypesByClient(client.getId());
+        List<SupportedMetalType> storedMetalTypesClientPremium = warehouseManager.getStoredMetalTypesByClient(premiumClient.getId());
+
         // Then
-        assertEquals(10 / SupportedMetalType.IRON.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(client.getId()));
-        assertEquals(10 / SupportedMetalType.SILVER.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(premiumClient.getId()));
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.IRON));
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(premiumClient.getId()).get(SupportedMetalType.SILVER));
-        assertEquals(List.of(SupportedMetalType.IRON), warehouseManager.getStoredMetalTypesByClient(client.getId()));
-        assertEquals(List.of(SupportedMetalType.SILVER), warehouseManager.getStoredMetalTypesByClient(premiumClient.getId()));
+        assertAll(
+                () -> assertEquals(List.of(SupportedMetalType.IRON), storedMetalTypesClient),
+                () -> assertEquals(List.of(SupportedMetalType.SILVER), storedMetalTypesClientPremium)
+        );
     }
 
     @Test
     void testGetMetalTypesToMassStoredByClient() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.SILVER, 10);
 
+        // When
+        Map<SupportedMetalType, Double> storedMetalTypes = warehouseManager.getMetalTypesToMassStoredByClient(client.getId());
+
         // Then
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.IRON));
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.SILVER));
+        assertAll(
+                () -> assertEquals(10, storedMetalTypes.get(SupportedMetalType.IRON)),
+                () -> assertEquals(10, storedMetalTypes.get(SupportedMetalType.SILVER))
+        );
     }
 
     @Test
@@ -128,23 +135,32 @@ class WarehouseManagerTest {
 
     @Test
     void testGetMetalTypesToMassStoredByClientMultipleClient() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(premiumClient.getId(), SupportedMetalType.IRON, 10);
 
+        // When
+        Map<SupportedMetalType, Double> storedMetalTypesClient = warehouseManager.getMetalTypesToMassStoredByClient(client.getId());
+        Map<SupportedMetalType, Double> storedMetalTypesClientPremium = warehouseManager.getMetalTypesToMassStoredByClient(premiumClient.getId());
+
         // Then
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(client.getId()).get(SupportedMetalType.IRON));
-        assertEquals(10, warehouseManager.getMetalTypesToMassStoredByClient(premiumClient.getId()).get(SupportedMetalType.IRON));
+        assertAll(
+                () -> assertEquals(10, storedMetalTypesClient.get(SupportedMetalType.IRON)),
+                () -> assertEquals(10, storedMetalTypesClientPremium.get(SupportedMetalType.IRON))
+        );
     }
 
     @Test
     void testGetTotalVolumeOccupiedByClient() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.SILVER, 10);
 
+        // When
+        Double occupied = warehouseManager.getTotalVolumeOccupiedByClient(client.getId());
+
         // Then
-        assertEquals(10 / SupportedMetalType.IRON.getDensity() + 10 / SupportedMetalType.SILVER.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(client.getId()));
+        assertEquals(10 / SupportedMetalType.IRON.getDensity() + 10 / SupportedMetalType.SILVER.getDensity(), occupied);
     }
 
     @Test
@@ -155,26 +171,32 @@ class WarehouseManagerTest {
 
     @Test
     void testGetTotalVolumeOccupiedByClientMultipleClient() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(premiumClient.getId(), SupportedMetalType.IRON, 10);
 
+        // When
+        Double occupiedClient = warehouseManager.getTotalVolumeOccupiedByClient(client.getId());
+        Double occupiedClientPremium = warehouseManager.getTotalVolumeOccupiedByClient(premiumClient.getId());
+
         // Then
-        assertEquals(10 / SupportedMetalType.IRON.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(client.getId()));
-        assertEquals(10 / SupportedMetalType.IRON.getDensity(), warehouseManager.getTotalVolumeOccupiedByClient(premiumClient.getId()));
+        assertAll(
+                () -> assertEquals(10 / SupportedMetalType.IRON.getDensity(), occupiedClient),
+                () -> assertEquals(10 / SupportedMetalType.IRON.getDensity(), occupiedClientPremium)
+        );
     }
 
     @Test
     void testGetStoredMetalTypesByClient() {
-        // When
+        // Gien
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.SILVER, 10);
+
+        // When
         List<SupportedMetalType> storedMetalTypes = warehouseManager.getStoredMetalTypesByClient(client.getId());
 
         // Then
-        assertEquals(2, storedMetalTypes.size());
-        assertTrue(storedMetalTypes.contains(SupportedMetalType.IRON));
-        assertTrue(storedMetalTypes.contains(SupportedMetalType.SILVER));
+        assertTrue(storedMetalTypes.containsAll(List.of(SupportedMetalType.IRON, SupportedMetalType.SILVER)));
     }
 
     @Test
@@ -185,22 +207,31 @@ class WarehouseManagerTest {
 
     @Test
     void testGetStoredMetalTypesByClientMultiple() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
 
+        // When
+        List<SupportedMetalType> storedMetalTypes = warehouseManager.getStoredMetalTypesByClient(client.getId());
+
         // Then
-        assertEquals(List.of(SupportedMetalType.IRON), warehouseManager.getStoredMetalTypesByClient(client.getId()));
+        assertEquals(List.of(SupportedMetalType.IRON), storedMetalTypes);
     }
 
     @Test
     void testGetStoredMetalTypesByClientMultipleClient() {
-        // When
+        // Given
         warehouseManager.addMetalIngot(client.getId(), SupportedMetalType.IRON, 10);
         warehouseManager.addMetalIngot(premiumClient.getId(), SupportedMetalType.PLATINUM, 10);
 
+        // When
+        List<SupportedMetalType> storedMetalTypesClient = warehouseManager.getStoredMetalTypesByClient(client.getId());
+        List<SupportedMetalType> storedMetalTypesClientPremium = warehouseManager.getStoredMetalTypesByClient(premiumClient.getId());
+
         // Then
-        assertEquals(List.of(SupportedMetalType.IRON), warehouseManager.getStoredMetalTypesByClient(client.getId()));
-        assertEquals(List.of(SupportedMetalType.PLATINUM), warehouseManager.getStoredMetalTypesByClient(premiumClient.getId()));
+        assertAll(
+                () -> assertEquals(List.of(SupportedMetalType.IRON), storedMetalTypesClient),
+                () -> assertEquals(List.of(SupportedMetalType.PLATINUM), storedMetalTypesClientPremium)
+        );
     }
 }

@@ -2,11 +2,12 @@ package com.capgemini.programowanie.obiektowe.clients;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ClientsManager implements Clients{
 
-    private final ArrayList<Client> clients;
+    private final List<Client> clients;
 
     public ClientsManager() {
         this.clients = new ArrayList<>();
@@ -24,39 +25,22 @@ public class ClientsManager implements Clients{
 
     @Override
     public String activatePremiumAccount(String clientId) {
-        return clients.stream()
-                .filter(c -> c.getId().equals(clientId))
-                .findFirst()
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
-                .setPremium(true)
-                .getId();
+        return this.getClientById(clientId).setPremium(true).getId();
     }
 
     @Override
     public String getClientFullName(String clientId) {
-        return clients.stream()
-                .filter(c -> c.getId().equals(clientId))
-                .findFirst()
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
-                .getFullName();
+        return this.getClientById(clientId).getFullName();
     }
 
     @Override
     public LocalDate getClientCreationDate(String clientId) {
-        return clients.stream()
-                .filter(c -> c.getId().equals(clientId))
-                .findFirst()
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
-                .getCreateDatetime();
+        return this.getClientById(clientId).getCreateDatetime();
     }
 
     @Override
     public boolean isPremiumClient(String clientId) {
-        return clients.stream()
-                .filter(c -> c.getId().equals(clientId))
-                .findFirst()
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId))
-                .isPremium();
+        return this.getClientById(clientId).isPremium();
     }
 
     @Override
