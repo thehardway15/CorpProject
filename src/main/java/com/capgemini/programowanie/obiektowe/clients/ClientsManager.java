@@ -59,6 +59,6 @@ public class ClientsManager implements Clients{
         return clients.stream()
                 .filter(c -> c.getId().equals(clientId))
                 .findFirst()
-                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId));
+                .orElseThrow(() -> new ClientNotFoundException("Client not found with id: " + clientId, clientId));
     }
 }

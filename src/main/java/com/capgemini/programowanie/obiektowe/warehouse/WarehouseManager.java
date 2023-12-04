@@ -37,7 +37,7 @@ public class WarehouseManager implements Warehouse{
         Client client = clientsManager.getClientById(clientId);
 
         if (!client.isPremium() && this.onlyForPremiumMetalType.contains(metalType)) {
-            throw new ProhibitedMetalTypeException("Client with id: " + clientId + " is not premium and cannot store " + metalType);
+            throw new ProhibitedMetalTypeException("Client with id: " + clientId + " is not premium and cannot store " + metalType, clientId, metalType);
         }
 
         double area = mass / metalType.getDensity();
